@@ -3,444 +3,948 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calculadora de Dietas</title>
+  <meta name="theme-color" content="#2563eb">
+  <title>TacoDiet Pro</title>
   <style>
     :root {
-      --bg: #eef2f7;
+      --bg: #f3f6fb;
       --surface: #ffffff;
-      --muted-surface: #f8fafc;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --secondary: #334155;
-      --danger: #dc2626;
-      --danger-soft: #fee2e2;
-      --text: #0f172a;
+      --surface-soft: #f8fafc;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --accent-soft: #dbeafe;
+      --ink: #0f172a;
       --muted: #64748b;
-      --border: #cbd5e1;
+      --line: #d6dee9;
+      --line-strong: #b6c2d2;
+      --danger: #b91c1c;
+      --danger-soft: #fee2e2;
+      --warning: #a16207;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --radius: 8px;
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      min-height: 100%;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       background: var(--bg);
-      color: var(--text);
+      color: var(--ink);
       font-family: "Segoe UI", Arial, sans-serif;
     }
 
-    .app {
-      width: min(980px, calc(100% - 28px));
-      margin: 14px auto;
-      display: flex;
-      min-height: calc(100vh - 28px);
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    header {
-      background: var(--primary);
-      color: white;
-      padding: 22px 24px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-      line-height: 1.1;
-    }
-
-    header p {
-      margin: 5px 0 0;
-      color: #dbeafe;
-      font-size: 14px;
-    }
-
-    main {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 22px;
-      flex: 1;
-    }
-
-    .section-title {
-      margin: 16px 0 10px;
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .section-title:first-child {
-      margin-top: 0;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px 18px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .field input {
-      width: 100%;
-      border: 1px solid var(--border);
-      background: var(--muted-surface);
-      color: var(--text);
-      font: 17px Consolas, monospace;
-      padding: 11px 12px;
-      text-align: center;
-      outline: none;
-    }
-
-    .field input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
-    }
-
-    .field input:disabled {
-      background: #e5e7eb;
-      color: var(--muted);
-    }
-
-    .help {
-      min-height: 18px;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .field.error input {
-      border-color: var(--danger);
-      background: var(--danger-soft);
-    }
-
-    .field.error .help {
-      color: var(--danger);
-      font-weight: 600;
-    }
-
-    .monthly {
-      margin-top: 16px;
-      border: 1px solid var(--border);
-      background: var(--muted-surface);
-      padding: 16px;
-    }
-
-    .check-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      font-weight: 700;
-      line-height: 1.35;
-    }
-
-    .check-row input {
-      margin-top: 3px;
-      width: 18px;
-      height: 18px;
-    }
-
-    .monthly-note {
-      margin: 6px 0 12px 28px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .country-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 24px;
-      margin-left: 28px;
-      color: var(--text);
-      font-size: 14px;
-    }
-
-    .country-options label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 22px;
+    button,
+    input {
+      font: inherit;
     }
 
     button {
       border: 0;
-      padding: 13px 16px;
-      color: white;
-      cursor: pointer;
-      font: 700 15px "Segoe UI", Arial, sans-serif;
     }
 
-    .secondary {
-      background: var(--secondary);
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
     }
 
-    .primary {
-      background: var(--primary);
-    }
-
-    button:hover {
-      filter: brightness(0.92);
-    }
-
-    .status {
+    .topbar {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 18px;
+      padding: 16px 22px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(22px, 2vw, 30px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .version-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .workspace {
+      width: 100%;
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(620px, 1fr) minmax(360px, 450px);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .form-panel,
+    .result-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .form-panel {
+      min-height: calc(100vh - 102px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .form-scroll {
+      padding: 20px 22px 0;
+      overflow: auto;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .status-text {
       color: var(--muted);
       font-size: 13px;
-      padding: 0 2px 4px;
+      text-align: right;
     }
 
-    dialog {
-      width: min(620px, calc(100% - 30px));
-      border: 0;
-      padding: 0;
-      box-shadow: 0 22px 70px rgba(15, 23, 42, 0.28);
+    .feedback {
+      margin-bottom: 18px;
+      padding: 13px 14px;
+      color: var(--danger);
+      background: var(--danger-soft);
+      border: 1px solid #fecaca;
+      border-radius: var(--radius);
+      font-size: 14px;
+      line-height: 1.4;
     }
 
-    dialog::backdrop {
-      background: rgba(15, 23, 42, 0.45);
+    .feedback strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #7f1d1d;
     }
 
-    .modal-bar {
-      height: 8px;
-      background: var(--primary);
-    }
-
-    .modal-bar.error {
-      background: var(--danger);
-    }
-
-    .modal-body {
-      padding: 22px;
-      background: white;
-    }
-
-    .modal-body h2 {
-      margin: 0 0 14px;
-      font-size: 22px;
-    }
-
-    .error-list {
+    .feedback ul {
       margin: 0;
       padding-left: 20px;
-      color: var(--muted);
-      line-height: 1.45;
     }
 
-    .result-head {
-      margin-bottom: 16px;
-      padding: 18px 20px;
-      background: var(--primary);
-      color: white;
+    .form-section {
+      padding: 4px 0 20px;
+      border-bottom: 1px solid var(--line);
     }
 
-    .result-head h2 {
-      margin: 0;
-      font-size: 26px;
+    .form-section + .form-section {
+      padding-top: 20px;
     }
 
-    .result-head p {
-      margin: 4px 0 0;
-      color: #dbeafe;
+    .form-section h3 {
+      margin: 0 0 14px;
+      font-size: 15px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #1e293b;
       font-size: 13px;
+      font-weight: 700;
     }
 
-    table {
+    .input-line {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .input-line.with-picker {
+      grid-template-columns: minmax(0, 1fr) 44px;
+    }
+
+    .field input[type="text"] {
       width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 14px;
+      height: 44px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface-soft);
+      color: var(--ink);
+      border-radius: var(--radius);
+      padding: 0 12px;
+      outline: none;
+      font-family: Consolas, "Segoe UI Mono", monospace;
       font-size: 15px;
     }
 
-    th,
-    td {
-      border-bottom: 1px solid var(--border);
+    .field input[type="text"]:focus {
+      border-color: var(--accent);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    }
+
+    .field input[type="text"]:disabled {
+      background: #e5e7eb;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .picker-button,
+    .icon-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+    }
+
+    .picker-button {
+      width: 44px;
+      height: 44px;
+      color: var(--accent-dark);
+      background: #ffffff;
+      border: 1px solid var(--line-strong);
+    }
+
+    .picker-button:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+
+    .picker-button:disabled {
+      color: #94a3b8;
+      background: #e5e7eb;
+      border-color: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .date-popover {
+      position: fixed;
+      z-index: 50;
+      width: min(340px, calc(100vw - 24px));
+      padding: 14px;
+      color: var(--ink);
+      background: #ffffff;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+    }
+
+    .date-popover[hidden] {
+      display: none;
+    }
+
+    .date-picker-head {
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr) 36px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .date-picker-title {
+      text-align: center;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .date-nav,
+    .date-day,
+    .date-action {
+      min-height: 36px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .date-nav {
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      border: 1px solid #bfdbfe;
+    }
+
+    .date-grid,
+    .date-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .date-weekdays {
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .date-day {
+      color: #1e293b;
+      background: #ffffff;
+      border: 1px solid var(--line);
+    }
+
+    .date-day:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .date-day.is-today {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .date-day.is-selected {
+      border-color: var(--accent-dark);
+      color: #ffffff;
+      background: var(--accent);
+    }
+
+    .date-empty {
+      min-height: 36px;
+    }
+
+    .time-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .time-row[hidden] {
+      display: none;
+    }
+
+    .time-row label {
+      display: grid;
+      gap: 5px;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .time-row select {
+      width: 100%;
+      height: 38px;
+      padding: 0 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .date-picker-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .date-action {
+      color: #1e293b;
+      background: #ffffff;
+      border: 1px solid var(--line-strong);
+    }
+
+    .date-action.primary {
+      color: #ffffff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .date-action:hover,
+    .date-nav:hover {
+      filter: brightness(0.96);
+    }
+
+    .help {
+      min-height: 18px;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .field.error input[type="text"] {
+      border-color: var(--danger);
+      background: #fff7f7;
+    }
+
+    .field.error .help {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .mode-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .check-row input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--accent);
+    }
+
+    .mode-note {
+      margin: 5px 0 0 28px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .segmented {
+      display: inline-grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+      margin: 12px 0 0 28px;
+      padding: 4px;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .segmented label {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .segmented input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segmented label:has(input:checked) {
+      color: var(--accent-dark);
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+    }
+
+    .segmented label:has(input:disabled) {
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .action-bar {
+      position: sticky;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+      gap: 12px;
+      padding: 16px 22px 20px;
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+    }
+
+    .icon-action {
+      min-height: 46px;
+      padding: 0 16px;
+      font-weight: 800;
+    }
+
+    .icon-action.primary {
+      color: #ffffff;
+      background: var(--accent);
+    }
+
+    .icon-action.primary:hover {
+      background: var(--accent-dark);
+    }
+
+    .icon-action.secondary {
+      color: #1e293b;
+      background: #ffffff;
+      border: 1px solid var(--line-strong);
+    }
+
+    .icon-action.secondary:hover {
+      background: var(--surface-soft);
+      border-color: #94a3b8;
+    }
+
+    .icon-action:disabled {
+      color: #94a3b8;
+      background: #e5e7eb;
+      border-color: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .result-panel {
+      position: sticky;
+      top: 18px;
+      overflow: hidden;
+    }
+
+    .result-head {
+      padding: 20px;
+      color: #ffffff;
+      background: var(--accent-dark);
+    }
+
+    .result-head span {
+      display: block;
+      margin-bottom: 6px;
+      color: #dbeafe;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .result-head strong {
+      display: block;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .result-head p {
+      min-height: 18px;
+      margin: 8px 0 0;
+      color: #fee2e2;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .result-body {
+      padding: 18px 20px 20px;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .result-table th,
+    .result-table td {
       padding: 11px 8px;
+      border-bottom: 1px solid var(--line);
       text-align: center;
     }
 
-    th:first-child,
-    td:first-child {
+    .result-table th:first-child,
+    .result-table td:first-child {
       text-align: left;
     }
 
-    .note {
-      color: var(--primary-dark);
+    .result-table th {
+      color: #334155;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .result-note {
+      min-height: 42px;
+      margin: 14px 0 0;
+      padding: 12px;
+      color: var(--accent-dark);
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius);
       font-size: 13px;
-      line-height: 1.4;
-      margin-bottom: 16px;
+      line-height: 1.45;
     }
 
-    .modal-actions {
+    .result-actions {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 18px;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 14px;
     }
 
-    @media (max-width: 720px) {
-      .grid,
-      .actions,
-      .modal-actions {
+    .icon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      stroke-width: 2;
+    }
+
+    @media (max-width: 1120px) {
+      .workspace {
         grid-template-columns: 1fr;
       }
 
-      header h1 {
-        font-size: 24px;
+      .form-panel {
+        min-height: auto;
       }
 
-      main {
-        padding: 16px;
+      .result-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        align-items: flex-start;
+        padding: 14px;
       }
 
-      .monthly-note {
-        margin-left: 0;
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+      }
+
+      .brand p {
+        display: none;
+      }
+
+      .workspace {
+        padding: 12px;
+      }
+
+      .form-scroll,
+      .result-body {
+        padding-inline: 14px;
+      }
+
+      .field-grid,
+      .action-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .segmented {
+        width: calc(100% - 28px);
       }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <h1>Calculadora de Dietas</h1>
-      <p>Cálculo manual de kilómetros, dietas y pernoctas</p>
+  <svg aria-hidden="true" width="0" height="0" style="position:absolute">
+    <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 2v4"></path>
+      <path d="M16 2v4"></path>
+      <path d="M3 10h18"></path>
+      <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+    </symbol>
+    <symbol id="icon-calculator" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+      <path d="M8 6h8"></path>
+      <path d="M8 10h.01"></path>
+      <path d="M12 10h.01"></path>
+      <path d="M16 10h.01"></path>
+      <path d="M8 14h.01"></path>
+      <path d="M12 14h.01"></path>
+      <path d="M16 14h.01"></path>
+      <path d="M8 18h.01"></path>
+      <path d="M12 18h.01"></path>
+      <path d="M16 18h.01"></path>
+    </symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    </symbol>
+    <symbol id="icon-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12a9 9 0 0 1 15.5-6.2"></path>
+      <path d="M18 3v4h-4"></path>
+      <path d="M21 12a9 9 0 0 1-15.5 6.2"></path>
+      <path d="M6 21v-4h4"></path>
+    </symbol>
+    <symbol id="icon-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="19" r="3"></circle>
+      <circle cx="18" cy="5" r="3"></circle>
+      <path d="M12 19h4.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H12"></path>
+    </symbol>
+  </svg>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg class="icon" aria-hidden="true"><use href="#icon-route"></use></svg>
+        </div>
+        <div>
+          <h1>TacoDiet Pro</h1>
+          <p>Cálculo de kilómetros, dietas y pernoctas por país</p>
+        </div>
+      </div>
+      <span class="version-pill" id="file_version">Versión archivo v2.3</span>
     </header>
 
-    <main>
-      <div class="section-title">1. Kilómetros</div>
-      <div class="grid">
-        <div class="field" data-field="km_salida">
-          <label for="km_salida">Kms. salida</label>
-          <input id="km_salida" autocomplete="off" inputmode="decimal">
-          <div class="help">Kilómetros al salir. Ej: 120000</div>
-        </div>
-        <div class="field" data-field="km_llegada">
-          <label for="km_llegada">Kms. llegada</label>
-          <input id="km_llegada" autocomplete="off" inputmode="decimal">
-          <div class="help">Kilómetros al llegar. Ej: 120850</div>
-        </div>
-      </div>
+    <main class="workspace">
+      <section class="form-panel" aria-label="Formulario de viaje">
+        <div class="form-scroll">
+          <div class="panel-head">
+            <h2>Datos del viaje</h2>
+            <div id="status" class="status-text">Listo para introducir datos.</div>
+          </div>
 
-      <div class="section-title">2. Fechas del viaje</div>
-      <div class="grid">
-        <div class="field" data-field="viaje_salida">
-          <label for="viaje_salida">Viaje salida</label>
-          <input id="viaje_salida" autocomplete="off" placeholder="DD/MM/AAAA HH:MM">
-          <div class="help">Formato: DD/MM/AAAA HH:MM</div>
-        </div>
-        <div class="field" data-field="viaje_llegada">
-          <label for="viaje_llegada">Viaje llegada</label>
-          <input id="viaje_llegada" autocomplete="off" placeholder="DD/MM/AAAA HH:MM">
-          <div class="help">Debe ser posterior a la salida</div>
-        </div>
-      </div>
+          <div id="feedback" class="feedback" hidden></div>
 
-      <div class="section-title">3. Fronteras</div>
-      <div class="grid">
-        <div class="field" data-field="frontera_salida">
-          <label for="frontera_salida">Paso España -> Extranjero</label>
-          <input id="frontera_salida" autocomplete="off" placeholder="DD/MM/AAAA HH:MM">
-          <div class="help">Obligatorio en viaje normal: España -> extranjero</div>
-        </div>
-        <div class="field" data-field="frontera_retorno">
-          <label for="frontera_retorno">Paso Extranjero -> España</label>
-          <input id="frontera_retorno" autocomplete="off" placeholder="DD/MM/AAAA HH:MM">
-          <div class="help">Obligatorio salvo cierre día 24: extranjero -> España</div>
-        </div>
-      </div>
+          <section class="form-section">
+            <h3>1. Kilómetros</h3>
+            <div class="field-grid">
+              <div class="field" data-field="km_salida">
+                <label for="km_salida">Kms. salida</label>
+                <div class="input-line">
+                  <input id="km_salida" type="text" inputmode="decimal" autocomplete="off" placeholder="120000">
+                </div>
+                <div class="help">Kilómetros al salir.</div>
+              </div>
+              <div class="field" data-field="km_llegada">
+                <label for="km_llegada">Kms. llegada</label>
+                <div class="input-line">
+                  <input id="km_llegada" type="text" inputmode="decimal" autocomplete="off" placeholder="120850">
+                </div>
+                <div class="help">Kilómetros al llegar.</div>
+              </div>
+            </div>
+          </section>
 
-      <div class="monthly">
-        <label class="check-row">
-          <input id="continuacion_cierre" type="checkbox">
-          <span>Continuación tras cierre: el viaje empieza en un país conocido y las fronteras son opcionales</span>
-        </label>
-        <div class="monthly-note">
-          Úsalo para el resto del viaje después del día 24. Si cruza frontera, informa el paso que corresponda.
-        </div>
-        <div class="country-options">
-          <label><input type="radio" name="pais_inicio" value="espana" checked> Empieza en España</label>
-          <label><input type="radio" name="pais_inicio" value="extranjero"> Empieza en el extranjero</label>
-        </div>
-      </div>
+          <section class="form-section">
+            <h3>2. Fechas del viaje</h3>
+            <div class="field-grid">
+              <div class="field" data-field="viaje_salida">
+                <label for="viaje_salida">Viaje salida</label>
+                <div class="input-line with-picker">
+                  <input id="viaje_salida" type="text" autocomplete="off" placeholder="DD/MM/AAAA HH:MM">
+                  <button class="picker-button" type="button" data-open-picker="viaje_salida" title="Seleccionar fecha y hora" aria-label="Seleccionar fecha y hora de viaje salida">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg>
+                  </button>
+                </div>
+                <div class="help">Formato: DD/MM/AAAA HH:MM</div>
+              </div>
+              <div class="field" data-field="viaje_llegada">
+                <label for="viaje_llegada">Viaje llegada</label>
+                <div class="input-line with-picker">
+                  <input id="viaje_llegada" type="text" autocomplete="off" placeholder="DD/MM/AAAA HH:MM">
+                  <button class="picker-button" type="button" data-open-picker="viaje_llegada" title="Seleccionar fecha y hora" aria-label="Seleccionar fecha y hora de viaje llegada">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg>
+                  </button>
+                </div>
+                <div class="help">Debe ser posterior a la salida.</div>
+              </div>
+            </div>
+          </section>
 
-      <div class="monthly">
-        <label class="check-row">
-          <input id="cierre_24" type="checkbox">
-          <span>Cierre mensual día 24: pagar pernocta aunque el viaje cierre antes de medianoche</span>
-        </label>
-        <div class="monthly-note">
-          Úsalo solo cuando el viaje se cierra el día 24 y el conductor sigue de viaje.
-          Con esta opción activa, los pasos de frontera pueden quedar vacíos si aún no ha vuelto.
+          <section class="form-section">
+            <h3>3. Fronteras</h3>
+            <div class="field-grid">
+              <div class="field" data-field="frontera_salida">
+                <label for="frontera_salida">Paso España -> Extranjero</label>
+                <div class="input-line with-picker">
+                  <input id="frontera_salida" type="text" autocomplete="off" placeholder="DD/MM/AAAA HH:MM">
+                  <button class="picker-button" type="button" data-open-picker="frontera_salida" title="Seleccionar fecha y hora" aria-label="Seleccionar fecha y hora de paso España a extranjero">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg>
+                  </button>
+                </div>
+                <div class="help">Obligatorio en viaje normal.</div>
+              </div>
+              <div class="field" data-field="frontera_retorno">
+                <label for="frontera_retorno">Paso Extranjero -> España</label>
+                <div class="input-line with-picker">
+                  <input id="frontera_retorno" type="text" autocomplete="off" placeholder="DD/MM/AAAA HH:MM">
+                  <button class="picker-button" type="button" data-open-picker="frontera_retorno" title="Seleccionar fecha y hora" aria-label="Seleccionar fecha y hora de paso extranjero a España">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg>
+                  </button>
+                </div>
+                <div class="help">Obligatorio salvo cierre día 24.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <h3>4. Opciones de cierre</h3>
+            <div class="mode-stack">
+              <div>
+                <label class="check-row">
+                  <input id="continuacion_cierre" type="checkbox">
+                  <span>Continuación tras cierre</span>
+                </label>
+                <div class="mode-note">El viaje nuevo empieza en un país conocido y los pasos de frontera son opcionales.</div>
+                <div class="segmented" role="group" aria-label="País de inicio">
+                  <label><input type="radio" name="pais_inicio" value="espana" checked> Empieza en España</label>
+                  <label><input type="radio" name="pais_inicio" value="extranjero"> Empieza en el extranjero</label>
+                </div>
+              </div>
+
+              <div>
+                <label class="check-row">
+                  <input id="cierre_24" type="checkbox">
+                  <span>Cierre mensual día 24</span>
+                </label>
+                <div class="mode-note">Paga siempre la pernocta del día 24 aunque el viaje cierre antes de medianoche.</div>
+                <div class="field-grid" style="margin-top:12px">
+                  <div class="field" data-field="fin_viaje_24">
+                    <label for="fin_viaje_24">Fecha cierre día 24</label>
+                    <div class="input-line">
+                      <input id="fin_viaje_24" type="text" autocomplete="off" placeholder="DD/MM/AAAA" disabled>
+                    </div>
+                    <div class="help">Solo se usa con el check de cierre mensual.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-        <div class="grid">
-          <div class="field" data-field="fin_viaje_24">
-            <label for="fin_viaje_24">Fecha cierre día 24</label>
-            <input id="fin_viaje_24" autocomplete="off" placeholder="DD/MM/AAAA" disabled>
-            <div class="help">Solo se usa con el check de cierre mensual</div>
+
+        <div class="action-bar">
+          <button class="icon-action secondary" type="button" id="limpiar">
+            <svg class="icon" aria-hidden="true"><use href="#icon-refresh"></use></svg>
+            Limpiar
+          </button>
+          <button class="icon-action primary" type="button" id="calcular">
+            <svg class="icon" aria-hidden="true"><use href="#icon-calculator"></use></svg>
+            Calcular dietas
+          </button>
+        </div>
+      </section>
+
+      <aside class="result-panel" aria-label="Resultado">
+        <div class="result-head">
+          <span>Resultado</span>
+          <strong id="result_total">-- KM</strong>
+          <p id="result_dates">Pendiente de cálculo.</p>
+        </div>
+        <div class="result-body">
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Concepto</th>
+                <th>España</th>
+                <th>Extranjero</th>
+              </tr>
+            </thead>
+            <tbody id="result_rows"></tbody>
+          </table>
+          <div id="result_note" class="result-note">Los resultados aparecerán aquí al calcular.</div>
+          <div class="result-actions">
+            <button class="icon-action secondary" type="button" id="copy_result" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#icon-copy"></use></svg>
+              Copiar resumen
+            </button>
           </div>
         </div>
-      </div>
-
-      <div class="actions">
-        <button class="secondary" type="button" id="limpiar">Limpiar</button>
-        <button class="primary" type="button" id="calcular">Calcular dietas</button>
-      </div>
+      </aside>
     </main>
 
-    <div class="status">
-      <span id="status">Listo para introducir datos.</span>
-      <strong>v1.8 HTML</strong>
+    <div id="date_picker" class="date-popover" hidden>
+      <div class="date-picker-head">
+        <button class="date-nav" type="button" id="picker_prev" aria-label="Mes anterior">&lt;</button>
+        <div class="date-picker-title" id="picker_month_label"></div>
+        <button class="date-nav" type="button" id="picker_next" aria-label="Mes siguiente">&gt;</button>
+      </div>
+      <div class="date-weekdays">
+        <span>L</span>
+        <span>M</span>
+        <span>X</span>
+        <span>J</span>
+        <span>V</span>
+        <span>S</span>
+        <span>D</span>
+      </div>
+      <div class="date-grid" id="picker_days"></div>
+      <div class="time-row" id="picker_time_row">
+        <label for="picker_hour">
+          Hora
+          <select id="picker_hour"></select>
+        </label>
+        <label for="picker_minute">
+          Minuto
+          <select id="picker_minute"></select>
+        </label>
+      </div>
+      <div class="date-picker-actions">
+        <button class="date-action" type="button" id="picker_today">Hoy</button>
+        <button class="date-action" type="button" id="picker_cancel">Cancelar</button>
+        <button class="date-action primary" type="button" id="picker_apply">Aplicar</button>
+      </div>
     </div>
   </div>
-
-  <dialog id="messageDialog">
-    <div id="messageBar" class="modal-bar"></div>
-    <div class="modal-body">
-      <h2 id="messageTitle"></h2>
-      <div id="messageContent"></div>
-      <div class="modal-actions">
-        <button class="secondary" type="button" id="messageClose">Aceptar</button>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="resultDialog">
-    <div class="modal-body">
-      <div class="result-head">
-        <h2 id="resultTotal"></h2>
-        <p id="resultDates"></p>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Concepto</th>
-            <th>España</th>
-            <th>Extranjero</th>
-          </tr>
-        </thead>
-        <tbody id="resultRows"></tbody>
-      </table>
-      <div id="resultNote" class="note"></div>
-      <div class="modal-actions">
-        <button class="secondary" type="button" id="copyResult">Copiar resumen</button>
-        <button class="primary" type="button" id="closeResult">Cerrar</button>
-      </div>
-    </div>
-  </dialog>
 
   <script>
     const mealRows = [
@@ -467,22 +971,63 @@
     };
 
     const fieldHelp = {
-      km_salida: "Kilómetros al salir. Ej: 120000",
-      km_llegada: "Kilómetros al llegar. Ej: 120850",
+      km_salida: "Kilómetros al salir.",
+      km_llegada: "Kilómetros al llegar.",
       viaje_salida: "Formato: DD/MM/AAAA HH:MM",
-      viaje_llegada: "Debe ser posterior a la salida",
-      frontera_salida: "Obligatorio en viaje normal: España -> extranjero",
-      frontera_retorno: "Obligatorio salvo cierre día 24: extranjero -> España",
-      fin_viaje_24: "Solo se usa con el check de cierre mensual",
+      viaje_llegada: "Debe ser posterior a la salida.",
+      frontera_salida: "Obligatorio en viaje normal.",
+      frontera_retorno: "Obligatorio salvo cierre día 24.",
+      fin_viaje_24: "Solo se usa con el check de cierre mensual.",
+    };
+
+    const fileVersion = "v2.3";
+    const monthNames = [
+      "enero",
+      "febrero",
+      "marzo",
+      "abril",
+      "mayo",
+      "junio",
+      "julio",
+      "agosto",
+      "septiembre",
+      "octubre",
+      "noviembre",
+      "diciembre",
+    ];
+
+    const dateFields = {
+      viaje_salida: { mode: "datetime" },
+      viaje_llegada: { mode: "datetime" },
+      frontera_salida: { mode: "datetime" },
+      frontera_retorno: { mode: "datetime" },
     };
 
     const ids = Object.keys(fieldLabels);
     const fields = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
+    const pickerButtons = Object.fromEntries(
+      Object.keys(dateFields).map((id) => [id, document.querySelector(`[data-open-picker="${id}"]`)]),
+    );
+
     const cierre24 = document.getElementById("cierre_24");
     const continuacionCierre = document.getElementById("continuacion_cierre");
     const paisInicioRadios = Array.from(document.querySelectorAll('input[name="pais_inicio"]'));
+    const feedback = document.getElementById("feedback");
     const statusEl = document.getElementById("status");
+    const copyButton = document.getElementById("copy_result");
+    const datePicker = document.getElementById("date_picker");
+    const pickerMonthLabel = document.getElementById("picker_month_label");
+    const pickerDays = document.getElementById("picker_days");
+    const pickerTimeRow = document.getElementById("picker_time_row");
+    const pickerHour = document.getElementById("picker_hour");
+    const pickerMinute = document.getElementById("picker_minute");
+    let activePicker = {
+      id: null,
+      viewDate: new Date(),
+      selectedDate: new Date(),
+    };
     let lastSummary = "";
+    document.getElementById("file_version").textContent = `Versión archivo ${fileVersion}`;
 
     function setStatus(text) {
       statusEl.textContent = text;
@@ -492,49 +1037,56 @@
       return document.querySelector(`[data-field="${id}"]`);
     }
 
+    function currentHelp(id) {
+      if (id === "fin_viaje_24" && cierre24.checked) {
+        return "Debe ser día 24 y coincidir con Viaje llegada.";
+      }
+      if (continuacionCierre.checked && id === "frontera_salida") {
+        return "Opcional si pasa de España al extranjero.";
+      }
+      if (continuacionCierre.checked && id === "frontera_retorno") {
+        return "Opcional si pasa del extranjero a España.";
+      }
+      if (cierre24.checked && (id === "frontera_salida" || id === "frontera_retorno")) {
+        return "Opcional con cierre mensual día 24.";
+      }
+      return fieldHelp[id];
+    }
+
+    function clearFieldError(id) {
+      const wrapper = fieldWrapper(id);
+      wrapper.classList.remove("error");
+      wrapper.querySelector(".help").textContent = currentHelp(id);
+    }
+
     function clearErrors() {
-      ids.forEach((id) => {
-        const wrapper = fieldWrapper(id);
-        wrapper.classList.remove("error");
-        wrapper.querySelector(".help").textContent = fieldHelp[id];
-      });
-      if (cierre24.checked) {
-        fieldWrapper("fin_viaje_24").querySelector(".help").textContent =
-          "Fecha del cierre. Debe ser día 24 y coincidir con Viaje llegada.";
-      }
-      if (continuacionCierre.checked) {
-        ["frontera_salida", "frontera_retorno"].forEach((id) => {
-          fieldWrapper(id).querySelector(".help").textContent =
-            id === "frontera_salida"
-              ? "Opcional: rellenar si pasa de España a extranjero."
-              : "Opcional: rellenar si pasa de extranjero a España.";
-        });
-      }
+      ids.forEach(clearFieldError);
+      feedback.hidden = true;
+      feedback.innerHTML = "";
     }
 
     function addError(errors, id, message) {
-      if (!errors[id]) {
-        errors[id] = message;
-      }
+      if (!errors[id]) errors[id] = message;
     }
 
     function showErrors(errors) {
-      const messages = [];
+      const messages = Object.values(errors);
       Object.entries(errors).forEach(([id, message]) => {
         const wrapper = fieldWrapper(id);
         wrapper.classList.add("error");
         wrapper.querySelector(".help").textContent = message;
-        messages.push(message);
       });
+
+      feedback.innerHTML = `<strong>Revisa los datos</strong><ul>${messages.map((message) => `<li>${escapeHtml(message)}</li>`).join("")}</ul>`;
+      feedback.hidden = false;
 
       const first = Object.keys(errors)[0];
       if (first) {
         fields[first].focus();
-        fields[first].select();
+        if (!fields[first].disabled) fields[first].select();
       }
 
       setStatus(`Revisa ${Object.keys(errors).length} campo(s) marcado(s) en rojo.`);
-      showMessage("Revisa los datos", messages, true);
     }
 
     function parseNumber(value) {
@@ -551,9 +1103,7 @@
         clean = clean.replace(",", ".");
       } else if (clean.includes(".")) {
         const parts = clean.split(".");
-        if (parts.length > 1 && parts.slice(1).every((part) => part.length === 3)) {
-          clean = parts.join("");
-        }
+        if (parts.length > 1 && parts.slice(1).every((part) => part.length === 3)) clean = parts.join("");
       }
 
       const parsed = Number(clean);
@@ -563,15 +1113,23 @@
 
     function parseDateTime(value) {
       const clean = value.trim().replace(/\s+/g, " ");
-      const match = clean.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2}|\d{4})\s+(\d{1,2}):(\d{2})$/);
-      if (!match) throw new Error("invalid date");
-      return makeDate(match[1], match[2], match[3], match[4], match[5]);
+      const spanish = clean.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2}|\d{4})\s+(\d{1,2}):(\d{2})$/);
+      if (spanish) return makeDate(spanish[1], spanish[2], spanish[3], spanish[4], spanish[5]);
+
+      const native = clean.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+      if (native) return makeDate(native[3], native[2], native[1], native[4], native[5]);
+
+      throw new Error("invalid date");
     }
 
     function parseCloseDate(value) {
       const clean = value.trim().replace(/\s+/g, " ");
-      const dateOnly = clean.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2}|\d{4})$/);
-      if (dateOnly) return makeDate(dateOnly[1], dateOnly[2], dateOnly[3], 0, 0);
+      const spanishDate = clean.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2}|\d{4})$/);
+      if (spanishDate) return makeDate(spanishDate[1], spanishDate[2], spanishDate[3], 0, 0);
+
+      const nativeDate = clean.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (nativeDate) return makeDate(nativeDate[3], nativeDate[2], nativeDate[1], 0, 0);
+
       return parseDateTime(clean);
     }
 
@@ -597,7 +1155,7 @@
     }
 
     function dateOnlyKey(date) {
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
     }
 
     function combineDateAndTime(date, hour, minute, second = 0) {
@@ -620,16 +1178,200 @@
       return Number.isInteger(value) ? String(value) : value.toFixed(1).replace(".", ",");
     }
 
+    function readDateField(id) {
+      const value = fields[id].value.trim();
+      if (!value) return null;
+
+      try {
+        return dateFields[id].mode === "date" ? parseCloseDate(value) : parseDateTime(value);
+      } catch {
+        return null;
+      }
+    }
+
+    function syncPickerFromManual(id) {
+      return readDateField(id);
+    }
+
+    function fillTimeOptions() {
+      if (pickerHour.options.length && pickerMinute.options.length) return;
+
+      for (let hour = 0; hour < 24; hour += 1) {
+        const option = document.createElement("option");
+        option.value = pad(hour);
+        option.textContent = pad(hour);
+        pickerHour.appendChild(option);
+      }
+
+      for (let minute = 0; minute < 60; minute += 1) {
+        const option = document.createElement("option");
+        option.value = pad(minute);
+        option.textContent = pad(minute);
+        pickerMinute.appendChild(option);
+      }
+    }
+
+    function openPicker(id) {
+      if (fields[id].disabled || pickerButtons[id].disabled) return;
+
+      fillTimeOptions();
+      const parsed = readDateField(id);
+      const now = new Date();
+      const baseDate = parsed || new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+
+      activePicker = {
+        id,
+        viewDate: new Date(baseDate.getFullYear(), baseDate.getMonth(), 1),
+        selectedDate: baseDate,
+      };
+
+      pickerTimeRow.hidden = dateFields[id].mode === "date";
+      pickerHour.value = pad(baseDate.getHours());
+      pickerMinute.value = pad(baseDate.getMinutes());
+      renderDatePicker();
+
+      datePicker.hidden = false;
+      positionDatePicker(id);
+      setStatus(`Selecciona fecha${dateFields[id].mode === "datetime" ? " y hora" : ""} para ${fieldLabels[id]}.`);
+    }
+
+    function positionDatePicker(id) {
+      const buttonRect = pickerButtons[id].getBoundingClientRect();
+      const pickerRect = datePicker.getBoundingClientRect();
+      const margin = 12;
+      const preferredLeft = buttonRect.right - pickerRect.width;
+      const left = Math.max(margin, Math.min(preferredLeft, window.innerWidth - pickerRect.width - margin));
+      const belowTop = buttonRect.bottom + 8;
+      const aboveTop = buttonRect.top - pickerRect.height - 8;
+      const top = belowTop + pickerRect.height + margin <= window.innerHeight
+        ? belowTop
+        : Math.max(margin, aboveTop);
+
+      datePicker.style.left = `${left}px`;
+      datePicker.style.top = `${top}px`;
+    }
+
+    function renderDatePicker() {
+      const view = activePicker.viewDate;
+      const year = view.getFullYear();
+      const month = view.getMonth();
+      const today = new Date();
+      const selected = activePicker.selectedDate;
+      pickerMonthLabel.textContent = `${monthNames[month]} ${year}`;
+      pickerDays.innerHTML = "";
+
+      const firstDay = new Date(year, month, 1);
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const leading = (firstDay.getDay() + 6) % 7;
+
+      for (let index = 0; index < leading; index += 1) {
+        const empty = document.createElement("div");
+        empty.className = "date-empty";
+        pickerDays.appendChild(empty);
+      }
+
+      for (let day = 1; day <= daysInMonth; day += 1) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "date-day";
+        button.textContent = String(day);
+        button.dataset.day = String(day);
+
+        if (sameDate(today, new Date(year, month, day))) {
+          button.classList.add("is-today");
+        }
+        if (selected && sameDate(selected, new Date(year, month, day))) {
+          button.classList.add("is-selected");
+        }
+
+        button.addEventListener("click", () => selectPickerDay(day));
+        pickerDays.appendChild(button);
+      }
+    }
+
+    function selectPickerDay(day) {
+      const hour = Number(pickerHour.value || 0);
+      const minute = Number(pickerMinute.value || 0);
+      activePicker.selectedDate = new Date(
+        activePicker.viewDate.getFullYear(),
+        activePicker.viewDate.getMonth(),
+        day,
+        hour,
+        minute,
+        0,
+        0,
+      );
+      renderDatePicker();
+    }
+
+    function movePickerMonth(offset) {
+      activePicker.viewDate = new Date(
+        activePicker.viewDate.getFullYear(),
+        activePicker.viewDate.getMonth() + offset,
+        1,
+      );
+      renderDatePicker();
+      positionDatePicker(activePicker.id);
+    }
+
+    function setPickerToday() {
+      const now = new Date();
+      activePicker.selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), 0, 0);
+      activePicker.viewDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      pickerHour.value = pad(now.getHours());
+      pickerMinute.value = pad(now.getMinutes());
+      renderDatePicker();
+      positionDatePicker(activePicker.id);
+    }
+
+    function applyPickerDate() {
+      if (!activePicker.id || !activePicker.selectedDate) return;
+
+      const id = activePicker.id;
+      const selected = activePicker.selectedDate;
+      const date = dateFields[id].mode === "date"
+        ? new Date(selected.getFullYear(), selected.getMonth(), selected.getDate(), 0, 0, 0, 0)
+        : new Date(
+            selected.getFullYear(),
+            selected.getMonth(),
+            selected.getDate(),
+            Number(pickerHour.value),
+            Number(pickerMinute.value),
+            0,
+            0,
+          );
+
+      fields[id].value = dateFields[id].mode === "date" ? formatShortDate(date) : formatDate(date);
+      clearFieldError(id);
+      closePicker();
+      fields[id].focus();
+    }
+
+    function closePicker() {
+      datePicker.hidden = true;
+      activePicker.id = null;
+    }
+
+    function sameDate(first, second) {
+      return (
+        first.getFullYear() === second.getFullYear() &&
+        first.getMonth() === second.getMonth() &&
+        first.getDate() === second.getDate()
+      );
+    }
+
+    function setDateControlDisabled(id, disabled) {
+      fields[id].disabled = disabled;
+      if (pickerButtons[id]) {
+        pickerButtons[id].disabled = disabled;
+      }
+      if (disabled && activePicker.id === id) closePicker();
+    }
+
     function borderEvents(data) {
       const events = [];
-
-      if (data.frontera_salida) {
-        events.push({ moment: data.frontera_salida, before: "espana", after: "extranjero" });
-      }
-      if (data.frontera_retorno) {
-        events.push({ moment: data.frontera_retorno, before: "extranjero", after: "espana" });
-      }
-
+      if (data.frontera_salida) events.push({ moment: data.frontera_salida, before: "espana", after: "extranjero" });
+      if (data.frontera_retorno) events.push({ moment: data.frontera_retorno, before: "extranjero", after: "espana" });
       return events.sort((first, second) => first.moment - second.moment);
     }
 
@@ -641,24 +1383,9 @@
       return country;
     }
 
-    function isAbroad(data, moment) {
-      return countryAt(data, moment) === "extranjero";
-    }
-
-    function addOvernight(data, moment, espana, extranjero) {
-      if (isAbroad(data, moment)) {
-        extranjero[3] += 1;
-      } else {
-        espana[3] += 1;
-      }
-    }
-
     function addCountryMeal(country, index, espana, extranjero) {
-      if (country === "extranjero") {
-        extranjero[index] += 1;
-      } else {
-        espana[index] += 1;
-      }
+      if (country === "extranjero") extranjero[index] += 1;
+      else espana[index] += 1;
     }
 
     function addBorderMeal(data, start, end, index, espana, extranjero) {
@@ -673,6 +1400,10 @@
       addCountryMeal(countryAt(data, control), index, espana, extranjero);
     }
 
+    function addOvernight(data, moment, espana, extranjero) {
+      addCountryMeal(countryAt(data, moment), 3, espana, extranjero);
+    }
+
     function sameMoment(first, second) {
       return first && second && first.getTime() === second.getTime();
     }
@@ -682,25 +1413,15 @@
       const extranjero = [0, 0, 0, 0];
       const closeDayKey = data.fin_viaje_24 ? dateOnlyKey(data.fin_viaje_24) : null;
 
-      let day = new Date(
-        data.viaje_salida.getFullYear(),
-        data.viaje_salida.getMonth(),
-        data.viaje_salida.getDate(),
-      );
-      const lastDay = new Date(
-        data.viaje_llegada.getFullYear(),
-        data.viaje_llegada.getMonth(),
-        data.viaje_llegada.getDate(),
-      );
+      const day = new Date(data.viaje_salida.getFullYear(), data.viaje_salida.getMonth(), data.viaje_salida.getDate());
+      const lastDay = new Date(data.viaje_llegada.getFullYear(), data.viaje_llegada.getMonth(), data.viaje_llegada.getDate());
 
       while (day <= lastDay) {
         timeRanges.forEach((range) => {
           const start = combineDateAndTime(day, range[0][0], range[0][1]);
           const end = combineDateAndTime(day, range[1][0], range[1][1]);
           const index = range[2];
-
           if (data.viaje_llegada < start || data.viaje_salida > end) return;
-
           addBorderMeal(data, start, end, index, espana, extranjero);
         });
 
@@ -722,11 +1443,9 @@
     function validate() {
       clearErrors();
       const errors = {};
-      const values = Object.fromEntries(ids.map((id) => [id, fields[id].value.trim()]));
+      const values = Object.fromEntries(ids.map((id) => [id, fields[id].disabled ? "" : fields[id].value.trim()]));
       const continuacionActiva = continuacionCierre.checked;
-      const paisInicio = continuacionActiva
-        ? document.querySelector('input[name="pais_inicio"]:checked').value
-        : "espana";
+      const paisInicio = continuacionActiva ? document.querySelector('input[name="pais_inicio"]:checked').value : "espana";
 
       ["km_salida", "km_llegada", "viaje_salida", "viaje_llegada"].forEach((id) => {
         if (!values[id]) addError(errors, id, `Falta ${fieldLabels[id]}.`);
@@ -736,18 +1455,21 @@
         addError(errors, "frontera_salida", "Falta el paso España -> Extranjero.");
       }
 
-      if (!values.frontera_retorno && !cierre24.checked && !continuacionActiva) {
+      if (!continuacionActiva && !cierre24.checked && !values.frontera_retorno) {
         addError(errors, "frontera_retorno", "Falta el paso Extranjero -> España. Si el viaje sigue fuera, activa el cierre mensual día 24.");
       }
+
       if (cierre24.checked && !values.fin_viaje_24) {
         addError(errors, "fin_viaje_24", "Falta la fecha de cierre del día 24.");
       }
 
       const data = {};
+
       if (values.km_salida) {
         try { data.km_salida = parseNumber(values.km_salida); }
         catch { addError(errors, "km_salida", "Kms. salida debe ser un número válido."); }
       }
+
       if (values.km_llegada) {
         try { data.km_llegada = parseNumber(values.km_llegada); }
         catch { addError(errors, "km_llegada", "Kms. llegada debe ser un número válido."); }
@@ -841,44 +1563,22 @@
       return data;
     }
 
-    function showMessage(title, messages, isError = false) {
-      document.getElementById("messageTitle").textContent = title;
-      const content = document.getElementById("messageContent");
-      if (Array.isArray(messages)) {
-        content.innerHTML = `<ul class="error-list">${messages.map((msg) => `<li>${escapeHtml(msg)}</li>`).join("")}</ul>`;
-      } else {
-        content.textContent = messages;
-      }
-      document.getElementById("messageBar").classList.toggle("error", isError);
-      document.getElementById("messageDialog").showModal();
-    }
-
-    function escapeHtml(text) {
-      return String(text).replace(/[&<>"']/g, (char) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;",
-      }[char]));
+    function renderRows(result = { espana: [0, 0, 0, 0], extranjero: [0, 0, 0, 0] }) {
+      const rows = document.getElementById("result_rows");
+      rows.innerHTML = "";
+      mealRows.forEach(([label, index]) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${label}</td><td>${result.espana[index]}</td><td>${result.extranjero[index]}</td>`;
+        rows.appendChild(tr);
+      });
     }
 
     function showResults(data, result) {
       const totalKm = data.km_llegada - data.km_salida;
-      document.getElementById("resultTotal").textContent = `TOTAL: ${formatKm(totalKm)} KM`;
-      document.getElementById("resultDates").textContent = `${formatDate(data.viaje_salida)} > ${formatDate(data.viaje_llegada)}`;
+      document.getElementById("result_total").textContent = `${formatKm(totalKm)} KM`;
+      document.getElementById("result_dates").textContent = `${formatDate(data.viaje_salida)} -> ${formatDate(data.viaje_llegada)}`;
+      renderRows(result);
 
-      const rows = document.getElementById("resultRows");
-      rows.innerHTML = "";
-      mealRows.forEach(([label, index]) => {
-        const es = result.espana[index];
-        const ex = result.extranjero[index];
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${label}</td><td>${es}</td><td>${ex}</td>`;
-        rows.appendChild(tr);
-      });
-
-      const note = document.getElementById("resultNote");
       const notes = [];
       if (data.fin_viaje_24) {
         notes.push("Incluye siempre la pernocta del cierre mensual día 24. Se paga en el país donde esté a las 23:59:59.");
@@ -887,10 +1587,11 @@
         const pais = data.pais_inicio === "extranjero" ? "el extranjero" : "España";
         notes.push(`Continuación tras cierre: el viaje empieza en ${pais}; los pasos de frontera informados son opcionales.`);
       }
-      note.textContent = notes.join(" ");
+      document.getElementById("result_note").textContent = notes.length ? notes.join(" ") : "Cálculo completado sin opciones especiales.";
 
       lastSummary = buildSummary(totalKm, data, result);
-      document.getElementById("resultDialog").showModal();
+      copyButton.disabled = false;
+      setStatus("Cálculo completado correctamente.");
     }
 
     function buildSummary(totalKm, data, result) {
@@ -927,30 +1628,109 @@
       paisInicioRadios.forEach((radio) => {
         radio.disabled = !active;
       });
-
-      ["frontera_salida", "frontera_retorno"].forEach((id) => {
-        if (active) {
-          fieldWrapper(id).classList.remove("error");
-          fieldWrapper(id).querySelector(".help").textContent =
-            id === "frontera_salida"
-              ? "Opcional: rellenar si pasa de España a extranjero."
-              : "Opcional: rellenar si pasa de extranjero a España.";
-        } else {
-          fieldWrapper(id).querySelector(".help").textContent = fieldHelp[id];
-        }
-      });
+      clearFieldError("frontera_salida");
+      clearFieldError("frontera_retorno");
 
       if (active) {
         const pais = document.querySelector('input[name="pais_inicio"]:checked').value === "extranjero" ? "el extranjero" : "España";
-        setStatus(`Continuación activa: el viaje empieza en ${pais}. Fronteras opcionales.`);
+        setStatus(`Continuación activa: el viaje empieza en ${pais}.`);
       } else {
         document.querySelector('input[name="pais_inicio"][value="espana"]').checked = true;
-        setStatus("Viaje normal: empieza en España y requiere pasos de frontera.");
+        setStatus("Viaje normal: empieza en España.");
       }
     }
 
-    continuacionCierre.addEventListener("change", () => {
+    function updateCierre24() {
+      const active = cierre24.checked;
+      setDateControlDisabled("fin_viaje_24", !active);
+
+      if (active) {
+        if (!fields.fin_viaje_24.value.trim()) {
+          try {
+            const llegada = parseDateTime(fields.viaje_llegada.value);
+            if (llegada.getDate() === 24) {
+              fields.fin_viaje_24.value = formatShortDate(llegada);
+            }
+          } catch {}
+        }
+        setStatus("Cierre día 24 activo: los pasos de frontera pueden quedar vacíos.");
+      } else {
+        fields.fin_viaje_24.value = "";
+        setStatus("Cierre día 24 desactivado.");
+      }
+
+      ["fin_viaje_24", "frontera_salida", "frontera_retorno"].forEach(clearFieldError);
+    }
+
+    async function copySummary() {
+      if (!lastSummary) return;
+
+      try {
+        await navigator.clipboard.writeText(lastSummary);
+        setStatus("Resumen copiado al portapapeles.");
+      } catch {
+        const textarea = document.createElement("textarea");
+        textarea.value = lastSummary;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        const copied = document.execCommand("copy");
+        textarea.remove();
+        setStatus(copied ? "Resumen copiado al portapapeles." : "No se pudo copiar el resumen.");
+      }
+    }
+
+    function clearForm() {
+      ids.forEach((id) => {
+        fields[id].value = "";
+      });
+      closePicker();
+      cierre24.checked = false;
+      continuacionCierre.checked = false;
+      document.querySelector('input[name="pais_inicio"][value="espana"]').checked = true;
+      setDateControlDisabled("fin_viaje_24", true);
+      clearErrors();
       updateContinuacionCierre();
+      document.getElementById("result_total").textContent = "-- KM";
+      document.getElementById("result_dates").textContent = "Pendiente de cálculo.";
+      document.getElementById("result_note").textContent = "Los resultados aparecerán aquí al calcular.";
+      renderRows();
+      copyButton.disabled = true;
+      lastSummary = "";
+      fields.km_salida.focus();
+      setStatus("Formulario limpio.");
+    }
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      }[char]));
+    }
+
+    document.querySelectorAll("[data-open-picker]").forEach((button) => {
+      button.addEventListener("click", () => openPicker(button.dataset.openPicker));
+    });
+
+    Object.keys(dateFields).forEach((id) => {
+      fields[id].addEventListener("blur", () => {
+        const parsed = readDateField(id);
+        if (!parsed) return;
+        fields[id].value = dateFields[id].mode === "date" ? formatShortDate(parsed) : formatDate(parsed);
+      });
+    });
+
+    document.getElementById("picker_prev").addEventListener("click", () => movePickerMonth(-1));
+    document.getElementById("picker_next").addEventListener("click", () => movePickerMonth(1));
+    document.getElementById("picker_today").addEventListener("click", setPickerToday);
+    document.getElementById("picker_cancel").addEventListener("click", closePicker);
+    document.getElementById("picker_apply").addEventListener("click", applyPickerDate);
+
+    continuacionCierre.addEventListener("change", () => {
       clearErrors();
       updateContinuacionCierre();
     });
@@ -962,73 +1742,55 @@
     });
 
     cierre24.addEventListener("change", () => {
-      fields.fin_viaje_24.disabled = !cierre24.checked;
-      if (cierre24.checked) {
-        fieldWrapper("fin_viaje_24").querySelector(".help").textContent =
-          "Fecha del cierre. Debe ser día 24 y coincidir con Viaje llegada.";
-        if (!fields.fin_viaje_24.value.trim()) {
-          try {
-            const llegada = parseDateTime(fields.viaje_llegada.value);
-            if (llegada.getDate() === 24) fields.fin_viaje_24.value = formatShortDate(llegada);
-          } catch {}
-        }
-        setStatus("Cierre día 24 activo: los pasos de frontera pueden quedar vacíos.");
-      } else {
-        fields.fin_viaje_24.value = "";
-        clearErrors();
-        setStatus("Cierre día 24 desactivado.");
-      }
+      clearErrors();
+      updateCierre24();
     });
 
     document.getElementById("calcular").addEventListener("click", () => {
       const data = validate();
       if (!data) return;
-      const result = calculateAllowances(data);
-      setStatus("Cálculo completado correctamente.");
-      showResults(data, result);
+      showResults(data, calculateAllowances(data));
     });
 
-    document.getElementById("limpiar").addEventListener("click", () => {
-      ids.forEach((id) => {
-        fields[id].disabled = false;
-        fields[id].value = "";
-      });
-      cierre24.checked = false;
-      continuacionCierre.checked = false;
-      document.querySelector('input[name="pais_inicio"][value="espana"]').checked = true;
-      fields.fin_viaje_24.disabled = true;
-      clearErrors();
-      updateContinuacionCierre();
-      fields.fin_viaje_24.disabled = true;
-      fields.km_salida.focus();
-      setStatus("Formulario limpio.");
-    });
+    document.getElementById("limpiar").addEventListener("click", clearForm);
+    copyButton.addEventListener("click", copySummary);
 
-    document.getElementById("messageClose").addEventListener("click", () => {
-      document.getElementById("messageDialog").close();
-    });
-
-    document.getElementById("closeResult").addEventListener("click", () => {
-      document.getElementById("resultDialog").close();
-    });
-
-    document.getElementById("copyResult").addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(lastSummary);
-        setStatus("Resumen copiado al portapapeles.");
-        showMessage("Copiado", "El resumen se ha copiado al portapapeles.");
-      } catch {
-        showMessage("No se pudo copiar", "Selecciona el texto del resultado manualmente si el navegador bloquea el portapapeles.", true);
+    document.addEventListener("pointerdown", (event) => {
+      if (
+        !datePicker.hidden &&
+        !datePicker.contains(event.target) &&
+        !event.target.closest("[data-open-picker]")
+      ) {
+        closePicker();
       }
     });
 
+    window.addEventListener("resize", () => {
+      if (!datePicker.hidden && activePicker.id) positionDatePicker(activePicker.id);
+    });
+
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" && !document.querySelector("dialog[open]")) {
+      if (!datePicker.hidden) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closePicker();
+        }
+        if (event.key === "Enter") {
+          event.preventDefault();
+          applyPickerDate();
+        }
+        return;
+      }
+
+      if (event.key === "Enter" && event.target.tagName !== "BUTTON") {
+        event.preventDefault();
         document.getElementById("calcular").click();
       }
     });
 
+    renderRows();
     updateContinuacionCierre();
+    setDateControlDisabled("fin_viaje_24", true);
   </script>
 </body>
 </html>
