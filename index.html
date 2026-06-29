@@ -640,6 +640,58 @@
       line-height: 1.45;
     }
 
+    .daily-breakdown {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .daily-breakdown[hidden] {
+      display: none;
+    }
+
+    .daily-breakdown h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .daily-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .daily-table {
+      width: 100%;
+      min-width: 700px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .daily-table th,
+    .daily-table td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .daily-table th {
+      color: #334155;
+      background: var(--surface-soft);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .daily-table td:first-child {
+      text-align: left;
+    }
+
+    .daily-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
     .result-actions {
       display: grid;
       grid-template-columns: 1fr;
@@ -752,7 +804,7 @@
           <p>Cálculo de kilómetros, dietas y pernoctas por país</p>
         </div>
       </div>
-      <span class="version-pill" id="file_version">Versión archivo v2.3</span>
+      <span class="version-pill" id="file_version">Versión archivo v2.6</span>
     </header>
 
     <main class="workspace">
@@ -771,14 +823,14 @@
               <div class="field" data-field="km_salida">
                 <label for="km_salida">Kms. salida</label>
                 <div class="input-line">
-                  <input id="km_salida" type="text" inputmode="decimal" autocomplete="off" placeholder="120000">
+                  <input id="km_salida" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="120000">
                 </div>
                 <div class="help">Kilómetros al salir.</div>
               </div>
               <div class="field" data-field="km_llegada">
                 <label for="km_llegada">Kms. llegada</label>
                 <div class="input-line">
-                  <input id="km_llegada" type="text" inputmode="decimal" autocomplete="off" placeholder="120850">
+                  <input id="km_llegada" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="120850">
                 </div>
                 <div class="help">Kilómetros al llegar.</div>
               </div>
@@ -796,7 +848,7 @@
                     <svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg>
                   </button>
                 </div>
-                <div class="help">Formato: DD/MM/AAAA HH:MM</div>
+                <div class="help">Formato: DD/MM/AAAA HH:MM. Atajo: 2906 1800.</div>
               </div>
               <div class="field" data-field="viaje_llegada">
                 <label for="viaje_llegada">Viaje llegada</label>
@@ -806,7 +858,7 @@
                     <svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg>
                   </button>
                 </div>
-                <div class="help">Debe ser posterior a la salida.</div>
+                <div class="help">Debe ser posterior a la salida. Atajo: 2906 1800.</div>
               </div>
             </div>
           </section>
@@ -843,9 +895,9 @@
               <div>
                 <label class="check-row">
                   <input id="continuacion_cierre" type="checkbox">
-                  <span>Continuación tras cierre</span>
+                  <span>Continuación tras cierre del día 24</span>
                 </label>
-                <div class="mode-note">El viaje nuevo empieza en un país conocido y los pasos de frontera son opcionales.</div>
+                <div class="mode-note">Se abre siempre el día 25 de cada mes a las 00:00. El viaje nuevo empieza en un país conocido y los pasos de frontera son opcionales.</div>
                 <div class="segmented" role="group" aria-label="País de inicio">
                   <label><input type="radio" name="pais_inicio" value="espana" checked> Empieza en España</label>
                   <label><input type="radio" name="pais_inicio" value="extranjero"> Empieza en el extranjero</label>
@@ -855,18 +907,9 @@
               <div>
                 <label class="check-row">
                   <input id="cierre_24" type="checkbox">
-                  <span>Cierre mensual día 24</span>
+                  <span>Cierre mensual del día 24</span>
                 </label>
-                <div class="mode-note">Paga siempre la pernocta del día 24 aunque el viaje cierre antes de medianoche.</div>
-                <div class="field-grid" style="margin-top:12px">
-                  <div class="field" data-field="fin_viaje_24">
-                    <label for="fin_viaje_24">Fecha cierre día 24</label>
-                    <div class="input-line">
-                      <input id="fin_viaje_24" type="text" autocomplete="off" placeholder="DD/MM/AAAA" disabled>
-                    </div>
-                    <div class="help">Solo se usa con el check de cierre mensual.</div>
-                  </div>
-                </div>
+                <div class="mode-note">El día 24 debe cerrarse siempre a las 23:59. La pernocta del día 24 se paga aunque el viaje cierre antes de medianoche.</div>
               </div>
             </div>
           </section>
@@ -902,6 +945,27 @@
             <tbody id="result_rows"></tbody>
           </table>
           <div id="result_note" class="result-note">Los resultados aparecerán aquí al calcular.</div>
+          <section id="daily_breakdown" class="daily-breakdown" hidden>
+            <h3>Desglose diario</h3>
+            <div class="daily-table-wrap">
+              <table class="daily-table">
+                <thead>
+                  <tr>
+                    <th>Día</th>
+                    <th>Des. ES</th>
+                    <th>Com. ES</th>
+                    <th>Cena ES</th>
+                    <th>Pern. ES</th>
+                    <th>Des. EXT</th>
+                    <th>Com. EXT</th>
+                    <th>Cena EXT</th>
+                    <th>Pern. EXT</th>
+                  </tr>
+                </thead>
+                <tbody id="daily_breakdown_rows"></tbody>
+              </table>
+            </div>
+          </section>
           <div class="result-actions">
             <button class="icon-action secondary" type="button" id="copy_result" disabled>
               <svg class="icon" aria-hidden="true"><use href="#icon-copy"></use></svg>
@@ -967,20 +1031,18 @@
       viaje_llegada: "Viaje llegada",
       frontera_salida: "Paso España -> Extranjero",
       frontera_retorno: "Paso Extranjero -> España",
-      fin_viaje_24: "Fecha cierre día 24",
     };
 
     const fieldHelp = {
       km_salida: "Kilómetros al salir.",
       km_llegada: "Kilómetros al llegar.",
-      viaje_salida: "Formato: DD/MM/AAAA HH:MM",
-      viaje_llegada: "Debe ser posterior a la salida.",
+      viaje_salida: "Formato: DD/MM/AAAA HH:MM. Atajo: 2906 1800.",
+      viaje_llegada: "Debe ser posterior a la salida. Atajo: 2906 1800.",
       frontera_salida: "Obligatorio en viaje normal.",
       frontera_retorno: "Obligatorio salvo cierre día 24.",
-      fin_viaje_24: "Solo se usa con el check de cierre mensual.",
     };
 
-    const fileVersion = "v2.3";
+    const fileVersion = "v2.6";
     const monthNames = [
       "enero",
       "febrero",
@@ -1001,6 +1063,10 @@
       viaje_llegada: { mode: "datetime" },
       frontera_salida: { mode: "datetime" },
       frontera_retorno: { mode: "datetime" },
+    };
+
+    const manualDateFields = {
+      ...dateFields,
     };
 
     const ids = Object.keys(fieldLabels);
@@ -1038,9 +1104,6 @@
     }
 
     function currentHelp(id) {
-      if (id === "fin_viaje_24" && cierre24.checked) {
-        return "Debe ser día 24 y coincidir con Viaje llegada.";
-      }
       if (continuacionCierre.checked && id === "frontera_salida") {
         return "Opcional si pasa de España al extranjero.";
       }
@@ -1111,6 +1174,14 @@
       return parsed;
     }
 
+    function sanitizeKmField(id) {
+      fields[id].value = fields[id].value.replace(/\D/g, "");
+    }
+
+    function sanitizeKmFields() {
+      ["km_salida", "km_llegada"].forEach(sanitizeKmField);
+    }
+
     function parseDateTime(value) {
       const clean = value.trim().replace(/\s+/g, " ");
       const spanish = clean.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2}|\d{4})\s+(\d{1,2}):(\d{2})$/);
@@ -1131,6 +1202,135 @@
       if (nativeDate) return makeDate(nativeDate[3], nativeDate[2], nativeDate[1], 0, 0);
 
       return parseDateTime(clean);
+    }
+
+    function normalizeManualDateField(id) {
+      const config = manualDateFields[id];
+      if (!config || fields[id].disabled) return;
+
+      const formatted = formatManualDateValue(fields[id].value, config.mode);
+      if (formatted) fields[id].value = formatted;
+    }
+
+    function normalizeManualDateFields() {
+      Object.keys(manualDateFields).forEach(normalizeManualDateField);
+    }
+
+    function formatManualDateValue(value, mode) {
+      const clean = value.trim().replace(/\s+/g, " ");
+      if (!clean) return "";
+
+      if (mode === "date") {
+        try {
+          return formatShortDate(parseCloseDate(clean));
+        } catch {}
+
+        const quickDate = parseQuickDatePart(clean);
+        return quickDate ? formatShortDate(quickDate) : "";
+      }
+
+      try {
+        return formatDate(parseDateTime(clean));
+      } catch {}
+
+      const quickDateTime = parseQuickDateTime(clean);
+      if (quickDateTime?.date) return formatDate(quickDateTime.date);
+      if (quickDateTime?.display) return quickDateTime.display;
+      return "";
+    }
+
+    function parseQuickDateTime(value) {
+      const parts = value.split(/\s+/).filter(Boolean);
+
+      if (parts.length === 2) {
+        const date = parseQuickDatePart(parts[0]) || tryParseCloseDate(parts[0]);
+        const time = parseQuickTimePart(parts[1]);
+        if (date && time) return { date: dateWithTime(date, time) };
+        if (date) return { display: formatShortDate(date) };
+        if (time) return { display: formatQuickTime(time) };
+      }
+
+      const digits = value.replace(/\D/g, "");
+      if (!digits) return null;
+
+      if (digits.length === 8 && /^20\d{2}$/.test(digits.slice(4))) {
+        const date = parseQuickDatePart(digits);
+        if (date) return { display: formatShortDate(date) };
+      }
+
+      for (const dateLength of [8, 6, 4]) {
+        if (digits.length === dateLength + 4) {
+          const date = parseQuickDatePart(digits.slice(0, dateLength));
+          const time = parseQuickTimePart(digits.slice(dateLength));
+          if (date && time) return { date: dateWithTime(date, time) };
+        }
+      }
+
+      if (digits.length === 4) {
+        const date = parseQuickDatePart(digits);
+        if (date) return { display: formatShortDate(date) };
+
+        const time = parseQuickTimePart(digits);
+        if (time) return { display: formatQuickTime(time) };
+      }
+
+      return null;
+    }
+
+    function parseQuickDatePart(value) {
+      const digits = value.replace(/\D/g, "");
+      let day;
+      let month;
+      let year = new Date().getFullYear();
+
+      if (digits.length === 4) {
+        day = digits.slice(0, 2);
+        month = digits.slice(2, 4);
+      } else if (digits.length === 6) {
+        day = digits.slice(0, 2);
+        month = digits.slice(2, 4);
+        year = digits.slice(4, 6);
+      } else if (digits.length === 8) {
+        day = digits.slice(0, 2);
+        month = digits.slice(2, 4);
+        year = digits.slice(4, 8);
+      } else {
+        return null;
+      }
+
+      try {
+        return makeDate(day, month, year, 0, 0);
+      } catch {
+        return null;
+      }
+    }
+
+    function parseQuickTimePart(value) {
+      const clean = value.trim();
+      const timeMatch = clean.match(/^(\d{1,2}):(\d{2})$/);
+      const digits = timeMatch ? `${pad(timeMatch[1])}${timeMatch[2]}` : clean.replace(/\D/g, "");
+      if (digits.length !== 4) return null;
+
+      const hour = Number(digits.slice(0, 2));
+      const minute = Number(digits.slice(2, 4));
+      if (hour > 23 || minute > 59) return null;
+      return { hour, minute };
+    }
+
+    function tryParseCloseDate(value) {
+      try {
+        return parseCloseDate(value);
+      } catch {
+        return null;
+      }
+    }
+
+    function dateWithTime(date, timeParts) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate(), timeParts.hour, timeParts.minute, 0, 0);
+    }
+
+    function formatQuickTime(timeParts) {
+      return `${pad(timeParts.hour)}:${pad(timeParts.minute)}`;
     }
 
     function makeDate(dayText, monthText, yearText, hourText, minuteText) {
@@ -1360,14 +1560,6 @@
       );
     }
 
-    function setDateControlDisabled(id, disabled) {
-      fields[id].disabled = disabled;
-      if (pickerButtons[id]) {
-        pickerButtons[id].disabled = disabled;
-      }
-      if (disabled && activePicker.id === id) closePicker();
-    }
-
     function borderEvents(data) {
       const events = [];
       if (data.frontera_salida) events.push({ moment: data.frontera_salida, before: "espana", after: "extranjero" });
@@ -1408,40 +1600,78 @@
       return first && second && first.getTime() === second.getTime();
     }
 
+    function emptyDietCounts() {
+      return [0, 0, 0, 0];
+    }
+
+    function addDietCounts(target, source) {
+      source.forEach((value, index) => {
+        target[index] += value;
+      });
+    }
+
     function calculateAllowances(data) {
-      const espana = [0, 0, 0, 0];
-      const extranjero = [0, 0, 0, 0];
+      const days = [];
       const closeDayKey = data.fin_viaje_24 ? dateOnlyKey(data.fin_viaje_24) : null;
 
       const day = new Date(data.viaje_salida.getFullYear(), data.viaje_salida.getMonth(), data.viaje_salida.getDate());
       const lastDay = new Date(data.viaje_llegada.getFullYear(), data.viaje_llegada.getMonth(), data.viaje_llegada.getDate());
 
       while (day <= lastDay) {
+        const dayRecord = {
+          date: new Date(day.getFullYear(), day.getMonth(), day.getDate()),
+          espana: emptyDietCounts(),
+          extranjero: emptyDietCounts(),
+        };
+
         timeRanges.forEach((range) => {
           const start = combineDateAndTime(day, range[0][0], range[0][1]);
           const end = combineDateAndTime(day, range[1][0], range[1][1]);
           const index = range[2];
           if (data.viaje_llegada < start || data.viaje_salida > end) return;
-          addBorderMeal(data, start, end, index, espana, extranjero);
+          addBorderMeal(data, start, end, index, dayRecord.espana, dayRecord.extranjero);
         });
 
         const overnight = combineDateAndTime(day, 23, 59, 59);
         if (dateOnlyKey(day) !== closeDayKey && data.viaje_salida <= overnight && overnight < data.viaje_llegada) {
-          addOvernight(data, overnight, espana, extranjero);
+          addOvernight(data, overnight, dayRecord.espana, dayRecord.extranjero);
         }
 
+        days.push(dayRecord);
         day.setDate(day.getDate() + 1);
       }
 
       if (data.fin_viaje_24) {
-        addOvernight(data, combineDateAndTime(data.fin_viaje_24, 23, 59, 59), espana, extranjero);
+        const key = dateOnlyKey(data.fin_viaje_24);
+        let dayRecord = days.find((record) => dateOnlyKey(record.date) === key);
+
+        if (!dayRecord) {
+          dayRecord = {
+            date: new Date(data.fin_viaje_24.getFullYear(), data.fin_viaje_24.getMonth(), data.fin_viaje_24.getDate()),
+            espana: emptyDietCounts(),
+            extranjero: emptyDietCounts(),
+          };
+          days.push(dayRecord);
+          days.sort((first, second) => first.date - second.date);
+        }
+
+        addOvernight(data, combineDateAndTime(data.fin_viaje_24, 23, 59, 59), dayRecord.espana, dayRecord.extranjero);
       }
 
-      return { espana, extranjero };
+      const espana = emptyDietCounts();
+      const extranjero = emptyDietCounts();
+      days.forEach((record) => {
+        addDietCounts(espana, record.espana);
+        addDietCounts(extranjero, record.extranjero);
+      });
+
+      return { espana, extranjero, days };
     }
 
     function validate() {
       clearErrors();
+      sanitizeKmFields();
+      normalizeManualDateFields();
       const errors = {};
       const values = Object.fromEntries(ids.map((id) => [id, fields[id].disabled ? "" : fields[id].value.trim()]));
       const continuacionActiva = continuacionCierre.checked;
@@ -1457,10 +1687,6 @@
 
       if (!continuacionActiva && !cierre24.checked && !values.frontera_retorno) {
         addError(errors, "frontera_retorno", "Falta el paso Extranjero -> España. Si el viaje sigue fuera, activa el cierre mensual día 24.");
-      }
-
-      if (cierre24.checked && !values.fin_viaje_24) {
-        addError(errors, "fin_viaje_24", "Falta la fecha de cierre del día 24.");
       }
 
       const data = {};
@@ -1496,12 +1722,9 @@
         data.frontera_retorno = null;
       }
 
-      if (cierre24.checked && values.fin_viaje_24) {
-        try { data.fin_viaje_24 = parseCloseDate(values.fin_viaje_24); }
-        catch { addError(errors, "fin_viaje_24", "Fecha cierre día 24 debe tener formato DD/MM/AAAA o DD/MM/AAAA HH:MM."); }
-      } else {
-        data.fin_viaje_24 = null;
-      }
+      data.fin_viaje_24 = cierre24.checked && data.viaje_llegada
+        ? new Date(data.viaje_llegada.getFullYear(), data.viaje_llegada.getMonth(), data.viaje_llegada.getDate(), 0, 0, 0, 0)
+        : null;
 
       if (data.km_salida !== undefined && data.km_llegada !== undefined) {
         if (data.km_salida < 0) addError(errors, "km_salida", "Los kilómetros de salida no pueden ser negativos.");
@@ -1546,10 +1769,7 @@
 
       if (cierre24.checked && data.fin_viaje_24) {
         if (data.fin_viaje_24.getDate() !== 24) {
-          addError(errors, "fin_viaje_24", "La fecha de cierre mensual debe ser día 24.");
-        }
-        if (data.viaje_llegada && dateOnlyKey(data.fin_viaje_24) !== dateOnlyKey(data.viaje_llegada)) {
-          addError(errors, "fin_viaje_24", "La fecha de cierre debe coincidir con la fecha de Viaje llegada.");
+          addError(errors, "viaje_llegada", "Para usar el cierre mensual, la fecha de llegada debe ser día 24.");
         }
       }
 
@@ -1573,11 +1793,45 @@
       });
     }
 
+    function renderDailyBreakdown(days = []) {
+      const section = document.getElementById("daily_breakdown");
+      const rows = document.getElementById("daily_breakdown_rows");
+      rows.innerHTML = "";
+
+      if (!days.length) {
+        section.hidden = true;
+        return;
+      }
+
+      days.forEach((day) => {
+        rows.appendChild(createDailyRow(day));
+      });
+
+      section.hidden = false;
+    }
+
+    function createDailyRow(day) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${formatShortDate(day.date)}</td>
+        <td>${day.espana[0]}</td>
+        <td>${day.espana[1]}</td>
+        <td>${day.espana[2]}</td>
+        <td>${day.espana[3]}</td>
+        <td>${day.extranjero[0]}</td>
+        <td>${day.extranjero[1]}</td>
+        <td>${day.extranjero[2]}</td>
+        <td>${day.extranjero[3]}</td>
+      `;
+      return tr;
+    }
+
     function showResults(data, result) {
       const totalKm = data.km_llegada - data.km_salida;
       document.getElementById("result_total").textContent = `${formatKm(totalKm)} KM`;
       document.getElementById("result_dates").textContent = `${formatDate(data.viaje_salida)} -> ${formatDate(data.viaje_llegada)}`;
       renderRows(result);
+      renderDailyBreakdown(result.days);
 
       const notes = [];
       if (data.fin_viaje_24) {
@@ -1585,7 +1839,7 @@
       }
       if (data.continuacion_cierre) {
         const pais = data.pais_inicio === "extranjero" ? "el extranjero" : "España";
-        notes.push(`Continuación tras cierre: el viaje empieza en ${pais}; los pasos de frontera informados son opcionales.`);
+        notes.push(`Continuación tras cierre del día 24: el viaje empieza en ${pais}; los pasos de frontera informados son opcionales.`);
       }
       document.getElementById("result_note").textContent = notes.length ? notes.join(" ") : "Cálculo completado sin opciones especiales.";
 
@@ -1614,11 +1868,20 @@
       ];
 
       if (data.fin_viaje_24) {
-        lines.push("", `Cierre mensual día 24: ${formatShortDate(data.fin_viaje_24)}`, "Incluye siempre la pernocta del día 24 según país a las 23:59:59.");
+        lines.push("", `Cierre mensual del día 24: ${formatShortDate(data.fin_viaje_24)}`, "Incluye siempre la pernocta del día 24 según país a las 23:59:59.");
       }
       if (data.continuacion_cierre) {
         const pais = data.pais_inicio === "extranjero" ? "el extranjero" : "España";
-        lines.push("", `Continuación tras cierre: empieza en ${pais}.`);
+        lines.push("", `Continuación tras cierre del día 24: empieza en ${pais}.`);
+      }
+
+      if (result.days?.length) {
+        lines.push("", "DESGLOSE DIARIO");
+        result.days.forEach((day) => {
+          lines.push(
+            `${formatShortDate(day.date)} | ES D:${day.espana[0]} C:${day.espana[1]} Ce:${day.espana[2]} P:${day.espana[3]} | EXT D:${day.extranjero[0]} C:${day.extranjero[1]} Ce:${day.extranjero[2]} P:${day.extranjero[3]}`,
+          );
+        });
       }
       return lines.join("\n");
     }
@@ -1642,24 +1905,15 @@
 
     function updateCierre24() {
       const active = cierre24.checked;
-      setDateControlDisabled("fin_viaje_24", !active);
 
       if (active) {
-        if (!fields.fin_viaje_24.value.trim()) {
-          try {
-            const llegada = parseDateTime(fields.viaje_llegada.value);
-            if (llegada.getDate() === 24) {
-              fields.fin_viaje_24.value = formatShortDate(llegada);
-            }
-          } catch {}
-        }
-        setStatus("Cierre día 24 activo: los pasos de frontera pueden quedar vacíos.");
+        normalizeManualDateField("viaje_llegada");
+        setStatus("Cierre mensual del día 24 activo: se usará la fecha de Viaje llegada.");
       } else {
-        fields.fin_viaje_24.value = "";
-        setStatus("Cierre día 24 desactivado.");
+        setStatus("Cierre mensual del día 24 desactivado.");
       }
 
-      ["fin_viaje_24", "frontera_salida", "frontera_retorno"].forEach(clearFieldError);
+      ["viaje_llegada", "frontera_salida", "frontera_retorno"].forEach(clearFieldError);
     }
 
     async function copySummary() {
@@ -1689,13 +1943,13 @@
       cierre24.checked = false;
       continuacionCierre.checked = false;
       document.querySelector('input[name="pais_inicio"][value="espana"]').checked = true;
-      setDateControlDisabled("fin_viaje_24", true);
       clearErrors();
       updateContinuacionCierre();
       document.getElementById("result_total").textContent = "-- KM";
       document.getElementById("result_dates").textContent = "Pendiente de cálculo.";
       document.getElementById("result_note").textContent = "Los resultados aparecerán aquí al calcular.";
       renderRows();
+      renderDailyBreakdown();
       copyButton.disabled = true;
       lastSummary = "";
       fields.km_salida.focus();
@@ -1716,11 +1970,13 @@
       button.addEventListener("click", () => openPicker(button.dataset.openPicker));
     });
 
-    Object.keys(dateFields).forEach((id) => {
+    ["km_salida", "km_llegada"].forEach((id) => {
+      fields[id].addEventListener("input", () => sanitizeKmField(id));
+    });
+
+    Object.keys(manualDateFields).forEach((id) => {
       fields[id].addEventListener("blur", () => {
-        const parsed = readDateField(id);
-        if (!parsed) return;
-        fields[id].value = dateFields[id].mode === "date" ? formatShortDate(parsed) : formatDate(parsed);
+        normalizeManualDateField(id);
       });
     });
 
@@ -1789,8 +2045,8 @@
     });
 
     renderRows();
+    renderDailyBreakdown();
     updateContinuacionCierre();
-    setDateControlDisabled("fin_viaje_24", true);
   </script>
 </body>
 </html>
