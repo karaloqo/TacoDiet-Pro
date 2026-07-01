@@ -971,7 +971,7 @@
           <p>Cálculo de kilómetros, dietas y pernoctas por país</p>
         </div>
       </div>
-      <span class="version-pill" id="file_version">Versión v3.6</span>
+      <span class="version-pill" id="file_version">Versión v3.7</span>
     </header>
 
     <main class="workspace">
@@ -1224,7 +1224,7 @@
       frontera_retorno: "Obligatorio salvo cierre día 24.",
     };
 
-    const fileVersion = "v3.6";
+    const fileVersion = "v3.7";
     const monthNames = [
       "enero",
       "febrero",
@@ -2146,6 +2146,12 @@
       }
     }
 
+    function scrollToStart() {
+      const formScroll = document.querySelector(".form-scroll");
+      formScroll?.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     function clearForm() {
       ids.forEach((id) => {
         fields[id].value = "";
@@ -2220,6 +2226,7 @@
       const data = validate();
       if (!data) return;
       showResults(data, calculateAllowances(data));
+      scrollToStart();
     });
 
     document.getElementById("limpiar").addEventListener("click", clearForm);
